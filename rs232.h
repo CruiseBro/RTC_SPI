@@ -4,6 +4,7 @@
  *  Created on: 10.12.2017
  *      Author: nicoo
  */
+#include "board.h"
 
 #ifndef SOURCE_RS232_H_
 #define SOURCE_RS232_H_
