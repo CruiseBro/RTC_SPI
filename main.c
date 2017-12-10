@@ -7,6 +7,8 @@
 
 #define BUFFER_SIZE		48
 #define LCD_LENGTH		48
+#define MENU_STRING		"Configure Mode  B1: Time        B2: Date        "
+#define CONFIG_STRING	"                B1.:+1    B1_:-1B2.:->    B2_:<-"
 
 //State 0 == show time mode
 //State 1 == show date mode
@@ -21,8 +23,8 @@ static char write_buffer[3];
 static char string_out[9];
 char readBuffer[BUFFER_SIZE];
 char display[LCD_LENGTH+1] =			"                                                ";
-const char menuString[LCD_LENGTH+1] =  	"Configure Mode  B1: Time        B2: Date        ";
-const char configString[LCD_LENGTH+1] = "                B1.:+1    B1_:-1B2.:->    B2_:<-";
+//const char menuString[LCD_LENGTH+1] =  	"Configure Mode  B1: Time        B2: Date        ";
+//const char configString[LCD_LENGTH+1] = "                B1.:+1    B1_:-1B2.:->    B2_:<-";
 
 
 void UART0_IrqHandler(void)
@@ -252,7 +254,7 @@ void showConfig(){
 	write_buffer[2] = 0;
 	menuidx = 0;
 	lcd_set_cursor(1,1);
-	lcd_print_string(configString);
+	lcd_print_string(CONFIG_STRING);
 }
 
 void ITM_SendString(const char *s) {
@@ -318,7 +320,7 @@ int main(void)
 		}
 		else if(state == 2) {
 			lcd_set_cursor(1,1);
-			lcd_print_string(menuString);
+			lcd_print_string(MENU_STRING);
 			while(state==2);
 			lcd_clear();
 		}
