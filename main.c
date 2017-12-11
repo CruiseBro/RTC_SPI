@@ -5,7 +5,7 @@
 #include "rtc_spi.h"
 #include "rs232.h"
 
-#define BUFFER_SIZE		48
+#define BUFFER_SIZE		49
 #define LCD_LENGTH		48
 #define MENU_STRING		"Configure Mode  B1: Time        B2: Date        "
 #define CONFIG_STRING	"                B1.:+1    B1_:-1B2.:->    B2_:<-"
@@ -23,15 +23,21 @@ static char write_buffer[3];
 static char string_out[9];
 char readBuffer[BUFFER_SIZE];
 char display[LCD_LENGTH+1] =			"                                                ";
-//const char menuString[LCD_LENGTH+1] =  	"Configure Mode  B1: Time        B2: Date        ";
-//const char configString[LCD_LENGTH+1] = "                B1.:+1    B1_:-1B2.:->    B2_:<-";
-
 
 void UART0_IrqHandler(void)
 {
-	memcpy(display, readBuffer, BUFFER_SIZE);
-	memcpy(display, string_out, 8);
-	UART_ReadBuffer(UART0, readBuffer, BUFFER_SIZE);
+	if(readBuffer[48] == '\3'){
+		memcpy(display, readBuffer, LCD_LENGTH);
+		memcpy(display, string_out, 8);
+		UART_ReadBuffer(UART0, readBuffer, 1);
+	}
+	else if(readBuffer[0] == '\2'){
+		UART_ReadBuffer(UART0, readBuffer, BUFFER_SIZE);
+	}
+	else {
+		UART_ReadBuffer(UART0, readBuffer, 1);
+	}
+
 }
 
 //Converts an two-digit BCD to ascii-string
@@ -297,7 +303,7 @@ int main(void)
 
 	RS232_Configure(115200, BOARD_MCK);
 
-	UART_ReadBuffer(UART0, readBuffer, BUFFER_SIZE);
+	UART_ReadBuffer(UART0, readBuffer, 1);
 
 	RS232_EnableIt();
 
@@ -340,7 +346,7 @@ int main(void)
 		}
 
 		memcpy(display, string_out, 8);
-		USART_WriteBuffer(USART1, display, BUFFER_SIZE);
+		RS232_send(display, LCD_LENGTH);
 		wait_ms(100);
 	}
 }

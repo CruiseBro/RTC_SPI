@@ -12,5 +12,6 @@
 uint8_t UART_ReadBuffer(Uart *uart, void *buffer, uint32_t size);
 void RS232_Configure(uint32_t baudrate, uint32_t masterClock);
 void RS232_EnableIt();
+void RS232_send(void* buffer, uint32_t size);
 
 #endif /* SOURCE_RS232_H_ */

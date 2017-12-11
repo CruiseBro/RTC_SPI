@@ -66,6 +66,14 @@ void RS232_Configure(uint32_t baudrate, uint32_t masterClock) {
 
 }
 
+void RS232_send(void* buffer, uint32_t size) {
+	USART_PutChar(USART1, ' ');
+	USART_PutChar(USART1, '\2');
+	USART_WriteBuffer(USART1, buffer, size);
+	USART_PutChar(USART1, '\3');
+	USART_PutChar(USART1, ' ');
+}
+
 void RS232_EnableIt() {
 	UART0->UART_IER = UART_IER_RXBUFF;
 	//USART1->US_IER = US_IER_RXBUFF;
