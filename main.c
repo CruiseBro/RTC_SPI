@@ -23,12 +23,13 @@ static char write_buffer[3];
 static char string_out[9];
 char readBuffer[BUFFER_SIZE];
 char display[LCD_LENGTH+1] =			"                                                ";
-
+const char empty[BUFFER_SIZE] = 		"                                                ";
 void UART0_IrqHandler(void)
 {
 	if(readBuffer[48] == '\3'){
 		memcpy(display, readBuffer, LCD_LENGTH);
 		memcpy(display, string_out, 8);
+		memcpy(readBuffer, empty, BUFFER_SIZE);
 		UART_ReadBuffer(UART0, readBuffer, 1);
 	}
 	else if(readBuffer[0] == '\2'){
